@@ -1,15 +1,14 @@
-// server/controllers/patientController.js
-const DailyLog = require('../models/DailyLog');
+const DailyLog = require("../models/DailyLog");
 
-// Helper to get today's date string YYYY-MM-DD
-const getTodayDate = () => new Date().toISOString().split('T')[0];
+// Helper to get today's date as a Date object (UTC start of day)
+const getTodayDate = () => new Date(new Date().toISOString().split("T")[0]);
 
 // @desc    Get patient dashboard stats
 // @route   GET /api/v1/patient/dashboard
 // @access  Private (Patient)
 exports.getDashboard = async (req, res) => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     // Find log for today, or return defaults
     let log = await DailyLog.findOne({ user: req.user._id, date: today });
@@ -18,7 +17,7 @@ exports.getDashboard = async (req, res) => {
       log = { steps: 0, water: 0, sleep: 0 };
     }
 
-    // 🟢 UPDATE: Send 'goals' from the user profile along with stats
+    // Send 'goals' from the user profile along with stats
     res.json({
       date: today,
       stats: {
@@ -26,13 +25,13 @@ exports.getDashboard = async (req, res) => {
         water: log.water,
         sleep: log.sleep,
       },
-      goals: req.user.wellnessGoals, // <--- ADD THIS LINE
+      goals: req.user.wellnessGoals,
       reminder: "Upcoming: Annual Blood Test on Dec 12th",
-      healthTip: "Drink at least 8 glasses of water today!"
+      healthTip: "Drink at least 8 glasses of water today!",
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -48,7 +47,11 @@ exports.logWater = async (req, res) => {
 
     if (!log) {
       // Create new log if it doesn't exist
-      log = await DailyLog.create({ user: req.user._id, date: today, water: amount });
+      log = await DailyLog.create({
+        user: req.user._id,
+        date: today,
+        water: amount,
+      });
     } else {
       // Update existing log
       log.water += parseInt(amount);
@@ -57,7 +60,7 @@ exports.logWater = async (req, res) => {
 
     res.json(log);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -72,7 +75,11 @@ exports.logSteps = async (req, res) => {
     let log = await DailyLog.findOne({ user: req.user._id, date: today });
 
     if (!log) {
-      log = await DailyLog.create({ user: req.user._id, date: today, steps: count });
+      log = await DailyLog.create({
+        user: req.user._id,
+        date: today,
+        steps: count,
+      });
     } else {
       log.steps += parseInt(count);
       await log.save();
@@ -80,7 +87,7 @@ exports.logSteps = async (req, res) => {
 
     res.json(log);
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };
 
@@ -90,13 +97,17 @@ exports.logSteps = async (req, res) => {
 exports.logSleep = async (req, res) => {
   try {
     const { hours } = req.body; // Get hours from request
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayDate();
 
     let log = await DailyLog.findOne({ user: req.user._id, date: today });
 
     if (!log) {
       // Create new log if it doesn't exist
-      log = await DailyLog.create({ user: req.user._id, date: today, sleep: hours });
+      log = await DailyLog.create({
+        user: req.user._id,
+        date: today,
+        sleep: hours,
+      });
     } else {
       // Update existing log (Overwriting sleep allows users to correct mistakes)
       log.sleep = parseFloat(hours);
@@ -106,6 +117,6 @@ exports.logSleep = async (req, res) => {
     res.json(log);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
 };

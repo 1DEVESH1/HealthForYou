@@ -1,15 +1,15 @@
 // server/models/DailyLog.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const DailyLogSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
     date: {
-      type: String, // Format: YYYY-MM-DD
+      type: Date, // Changed to Date data type
       required: true,
     },
     steps: {
@@ -31,4 +31,4 @@ const DailyLogSchema = new mongoose.Schema(
 // Ensure a user only has one log per date
 DailyLogSchema.index({ user: 1, date: 1 }, { unique: true });
 
-module.exports = mongoose.model('DailyLog', DailyLogSchema);
+module.exports = mongoose.model("DailyLog", DailyLogSchema);
