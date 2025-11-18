@@ -1,0 +1,9 @@
+# Node.js dependencies
+node_modules/
+
+# Server environment variables
+server/.env
+
+
+# OS files
+.DS_Store
