@@ -1,3 +1,12 @@
+**Important Note for Judges: Git Commit History**
+
+Please note that due to a critical version control error (accidental force push without pulling), we unfortunately lost our original commit timeline during the final stages of the hackathon. To recover the project, we had to force-push the complete, up-to-date codebase from a teammate's local environment.
+
+**As a result, the commit history currently displays only a few large commits and does not accurately reflect the incremental progress and individual contributions made by our team throughout the event.**
+
+We sincerely apologize for this oversight and kindly request that you evaluate our submission based on the features, functionality, and code quality demonstrated, rather than the Git contribution graph. Thank you for your understanding!
+
+---
 # 🏥 HealthForYou - Preventive Care Portal
 
 > **Hackathon Submission** | **Team Size:** 4 | **Stack:** MERN
